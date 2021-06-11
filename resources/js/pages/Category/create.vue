@@ -50,9 +50,13 @@ export default {
         //   })
         this.categoryForm.post('/api/category')
         .then((res) => {
-            console.log(res.data)
+            //console.log(res.data)
             this.categoryForm.category_name = '';
             this.$router.push({name: 'category-index'})
+            this.$toast.success({
+                title: res.data.alert-type,
+                message: res.data.message,
+            })
         }).catch((err) => {
             console.log(err)
         })
