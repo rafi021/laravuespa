@@ -18,8 +18,14 @@
                     <li class="nav-item">
                         <router-link class="nav-link" :to="{name: 'home'}">Home</router-link>
                     </li>
-                    <li class="nav-item" v-if="auth">
-                        <router-link class="nav-link" :to="{name: 'category-index'}">Product Category</router-link>
+                    <li class="nav-item">
+                        <router-link class="nav-link" :to="{name: 'category-index'}">Category</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link" :to="{name: 'subcategory-index'}">SubCategory</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link" :to="{name: 'products-index'}">Products</router-link>
                     </li>
                     <li class="nav-item">
                         <router-link class="nav-link" :to="{name: 'dashboard'}">Dashboard</router-link>

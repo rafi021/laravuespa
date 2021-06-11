@@ -1,69 +1,52 @@
 <template>
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-header d-flex justify-content-between align-items-center">
-             <h5 class="mb-0"> Product Category Create Component</h5>
-             <router-link :to="{name: 'category-index'}" class="btn btn-primary">Back to Category</router-link>
-        </div>
-          <div class="card-bdoy">
-              <div class="row">
-                  <div class="col-6 offset-3">
-                    <form @submit.prevent="createCategory">
+      <div class="row">
+          <div class="col-md-8 m-auto">
+              <div class="card">
+                  <div class="card-header">
+                      Add/Edit Category
+                  </div>
+                  <div class="card-body">
+                    <form @submit.prevent="categoryStore">
                         <div class="form-group">
-                            <label for="categoryName">Category Name</label>
-                            <input type="text" name="category_name" class="form-control" placeholder="Enter Category Name Here" v-model="categoryForm.category_name" :class="{'is-invalid': categoryForm.errors.has('category_name')}">
-                            <div class="text-danger" v-if="categoryForm.errors.has('category_name')" v-html="categoryForm.errors.get('category_name')" />
+                            <label for="">Category Name</label>
+                            <input type="text" class="form-contorl" name="categoryname" v-model="form.categoryname">
+                            <small class="text-danger" v-if="errors.categoryname">{{ errors.categoryname[0] }}</small>
                         </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Create Category </button>
-                        </div>
+                        <button type="submit" class="btn btn-primary">Add New</button>
                     </form>
                   </div>
               </div>
           </div>
-        </div>
       </div>
-    </div>
   </div>
 </template>
 
 <script>
-import { Form } from 'vform';
 export default {
-   data(){
-       return{
-           categoryForm: new Form({
-               category_name: '',
-             }),
+    data(){
+        return{
+            form: {
+                categoryname: null,
+            },
+            errors: {},
         }
-   },
-   methods: {
-       createCategory(){
-        //   axios.post('/api/category', this.form)
-        //   .then((res) => {
-        //     //   console.log(res.data)
-        //     this.$router.push({name: 'category-index'})
-        //   }).catch((err) =>{
-        //       this.errors = err.response.data.errors
-        //   })
-        this.categoryForm.post('/api/category')
-        .then((res) => {
-            //console.log(res.data)
-            this.categoryForm.category_name = '';
-            this.$router.push({name: 'category-index'})
-            this.$toast.success({
-                title: res.data.alert_type,
-                message: res.data.message,
+    },
+    methods: {
+        categoryStore(){
+            // console.log(this.form)
+            axios.post('/api/category', this.form)
+            .then(res => {
+                this.$router.push({name: 'category-index'})
             })
-        }).catch((err) => {
-            console.log(err)
-        })
-       }
-   }
-};
+            .catch(err =>{
+                this.errors = err.response.data.errors;
+            })
+        }
+    }
+}
 </script>
 
 <style>
+
 </style>

@@ -4,10 +4,10 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <h1>Category List</h1>
+            <h1>Sub Category List</h1>
             <div class="row">
               <div class="col-sm-6">
-                <router-link class="btn btn-primary" :to="{name: 'category-create'}">Add Category</router-link>
+                <router-link class="btn btn-primary" :to="{name: 'subcategory-create'}">Add Sub Category</router-link>
               </div>
               <div class="col-sm-6">
                 <form class="form-inline">
@@ -22,29 +22,31 @@
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">Name</th>
+                  <th scope="col">Sub Category</th>
+                  <th scope="col">Category Name</th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(category,index) in searchFilter" :key="category.id">
+                <tr v-for="(subcategory,index) in searchFilter" :key="subcategory.id">
                   <th scope="row">{{ index+1 }}</th>
-                  <td>{{ category.name }}</td>
+                  <td>{{ subcategory.name }}</td>
+                  <td>{{ subcategory.category.name}}</td>
                   <td>
-                    <router-link :to="{name: 'category-edit', params: { id: category.id } }"
+                    <router-link :to="{name: 'subcategory-edit', params: { id: subcategory.id } }"
                     class="btn btn-icon btn-outline-primary mr-1 mb-1">
                     Edit</router-link>
-                    <a @click="deleteCategory(category.id)" class="btn btn-icon btn-outline-danger mr-1 mb-1">Delete</a>
+                    <a @click="deleteSubCategory(subcategory.id)" class="btn btn-icon btn-outline-danger mr-1 mb-1">Delete</a>
                   </td>
                 </tr>
               </tbody>
             </table>
             <div class="row">
               <div class="col-md-6">
-                Total {{ total }} Categories
+                Total {{ total }} Sub-Categories
               </div>
               <div class="col-md-6">
-                <pagination align="center" :data="rawdata" @pagination-change-page="getCategories"></pagination>
+                <pagination align="center" :data="rawdata" @pagination-change-page="list"></pagination>
               </div>
             </div>
           </div>
@@ -64,42 +66,53 @@ export default {
   data(){
     return{
       rawdata: {},
-      categories: [],
+      subcategories: [],
       searchWord: '',
       errors: {},
       total: null
     }
   },
-  mounted() {
-    this.getCategories();
+  mounted(){
+    this.list()
   },
+  // created() {
+  //   axios.get('/api/subcategory')
+  //   .then((res) => {
+  //     //console.log(res.data.data)
+  //     this.rawdata = res.data;
+  //     this.subcategories = res.data.data;
+  //   }).catch((err) => {
+  //     console.log(err.response.data)
+  //     this.errors = err.response.data.errors;
+  //   })
+  // },
   computed: {
     searchFilter(){
-      return this.categories.filter(category => {
-        return (category.name.match(this.searchWord))
+      return this.subcategories.filter(subcategory => {
+        return (subcategory.name.match(this.searchWord))
       });
     }
   },
   methods: {
-    async getCategories(page=1){
-        await axios.get(`/api/category?page=${page}`).then(({data})=>{
+    async list(page=1){
+        await axios.get(`/api/subcategory?page=${page}`).then(({data})=>{
             this.rawdata = data
-            this.categories = data.data
+            this.subcategories = data.data
             this.total = data.total
         }).catch(({ response })=>{
             console.error(response)
         })
     },
-    deleteCategory(id){
-      axios.delete(`/api/category/${id}`)
+    deleteSubCategory(id){
+      axios.delete(`/api/subcategory/${id}`)
       .then(() => {
-        this.categories = this.categories.filter(category => {
-          return category.id !=id;
+        this.subcategories = this.subcategories.filter(subcategory => {
+          return subcategory.id !=id;
         })
       })
       .catch((err) => {
           console.log(err.response.data)
-          this.$router.push({name: 'category-index'})
+          this.$router.push({name: 'subcategory-index'})
         })
     }
   }
