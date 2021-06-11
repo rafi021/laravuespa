@@ -18,10 +18,10 @@ const routes = new VueRouter({
     mode: 'history',
     routes: [
         { path: '/', component: Home, name: "home"},
-        { path: '/dashboard', component: Dashboard, name: "dashboard"},
+        { path: '/dashboard', component: Dashboard, name: "dashboard", meta: { requiresAuth: true, } },
 
         // Auth routes
-        { path: '/auth/login', component: Login, name: "login"},
+        { path: '/auth/login', component: Login, name: "login",  meta: { requiresVisitor: true, }},
         { path: '/register', component: Register, name: "register"},
 
         // Category routes
