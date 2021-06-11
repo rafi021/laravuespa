@@ -1883,19 +1883,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   methods: {
     logout: function logout() {
       var _this = this;
 
       axios.post('/logout').then(function (res) {
-        console.log('success');
-
+        //console.log('success')
         _this.$toast.success({
           title: "Success",
           message: "Successfully Logout!!"
         });
+
+        _this.$router.push({
+          name: 'login'
+        });
       });
+    }
+  },
+  computed: {
+    auth: function auth() {
+      return this.$store.getters.getAuthenticated;
     }
   }
 });
@@ -2212,8 +2223,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   computed: {
-    message: function message() {
-      return this.$store.getters.getMessage;
+    user: function user() {
+      return this.$store.getters.getUser;
     }
   }
 });
@@ -2284,22 +2295,29 @@ __webpack_require__.r(__webpack_exports__);
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().get('/sanctum/csrf-cookie').then(function (response) {
         _this.loginForm.post('/login').then(function (response) {
-          _this.$router.push({
-            name: 'dashboard'
-          });
+          _this.getUser();
 
           _this.$toast.success({
             title: "Success",
             message: "Welcome, to Dashboard."
           });
+
+          _this.$router.push({
+            name: 'dashboard'
+          });
         });
       });
     },
     getUser: function getUser() {
+      var _this2 = this;
+
       axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/user').then(function (res) {
-        console.log(res.data);
-      })["catch"](function (err) {
-        console.log(err.response.data);
+        //console.log(res.data)
+        var user = res.data;
+
+        _this2.$store.commit('SET_USER', user);
+
+        _this2.$store.commit('SET_AUTHENTICATED', true);
       });
     }
   },
@@ -2394,7 +2412,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); // Vuex s
 var toastrConfigs = {
   position: 'top right',
   showDuration: 1000,
-  timeOut: 5000,
+  timeOut: 2000,
   closeButton: true,
   showMethod: 'fadeIn',
   hideMethod: 'faseOut'
@@ -2548,11 +2566,27 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_0__.default.use(vuex__WEBPACK_IMPORTED_MODULE_1__.default);
 var store = new vuex__WEBPACK_IMPORTED_MODULE_1__.default.Store({
   state: {
-    message: 'Welcome, to Dashboard'
+    message: 'Welcome, to Dashboard',
+    user: {},
+    authenticated: false
   },
   getters: {
     getMessage: function getMessage(state) {
       return state.message;
+    },
+    getUser: function getUser(state) {
+      return state.user;
+    },
+    getAuthenticated: function getAuthenticated(state) {
+      return state.authenticated;
+    }
+  },
+  mutations: {
+    SET_USER: function SET_USER(state, data) {
+      state.user = data;
+    },
+    SET_AUTHENTICATED: function SET_AUTHENTICATED(state, data) {
+      state.authenticated = data;
     }
   }
 });
@@ -38719,54 +38753,60 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              _c(
-                "li",
-                { staticClass: "nav-item" },
-                [
-                  _c(
-                    "router-link",
-                    {
-                      staticClass: "nav-link",
-                      attrs: { to: { name: "login" } }
-                    },
-                    [_vm._v("Login")]
+              _vm.auth
+                ? _c(
+                    "li",
+                    { staticClass: "nav-item" },
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          staticClass: "nav-link",
+                          attrs: { to: { name: "dashboard" } }
+                        },
+                        [_vm._v("Dashboard")]
+                      )
+                    ],
+                    1
                   )
-                ],
-                1
-              ),
+                : _vm._e(),
               _vm._v(" "),
-              _c(
-                "li",
-                { staticClass: "nav-item" },
-                [
-                  _c(
-                    "router-link",
-                    {
-                      staticClass: "nav-link",
-                      attrs: { to: { name: "register" } }
-                    },
-                    [_vm._v("Register")]
+              !_vm.auth
+                ? _c(
+                    "li",
+                    { staticClass: "nav-item" },
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          staticClass: "nav-link",
+                          attrs: { to: { name: "login" } }
+                        },
+                        [_vm._v("Login")]
+                      )
+                    ],
+                    1
                   )
-                ],
-                1
-              ),
+                : _vm._e(),
               _vm._v(" "),
-              _c("li", { staticClass: "nav-item" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "nav-link",
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.logout.apply(null, arguments)
-                      }
-                    }
-                  },
-                  [_vm._v("Logout")]
-                )
-              ])
+              _vm.auth
+                ? _c("li", { staticClass: "nav-item" }, [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "nav-link",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.logout.apply(null, arguments)
+                          }
+                        }
+                      },
+                      [_vm._v("Logout")]
+                    )
+                  ])
+                : _vm._e()
             ])
           ]
         )
@@ -39248,7 +39288,11 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
-            _vm._v("\n            " + _vm._s(_vm.message) + "\n          ")
+            _vm._v(
+              "\n            Welcome, to Dashboard Mr." +
+                _vm._s(_vm.user.name) +
+                "\n          "
+            )
           ])
         ])
       ])

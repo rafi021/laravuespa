@@ -7,7 +7,7 @@
               Dashboard
             </div>
             <div class="card-body">
-              {{ message }}
+              Welcome, to Dashboard Mr.{{ user.name }}
             </div>
           </div>
         </div>
@@ -18,8 +18,8 @@
 <script>
 export default {
   computed: {
-    message(){
-      return this.$store.getters.getMessage;
+    user(){
+      return this.$store.getters.getUser;
     }
   }
 }

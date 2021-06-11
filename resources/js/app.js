@@ -13,7 +13,7 @@ import 'cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css'
 var toastrConfigs = {
     position: 'top right',
     showDuration: 1000,
-    timeOut: 5000,
+    timeOut: 2000,
     closeButton: true,
     showMethod: 'fadeIn',
     hideMethod: 'faseOut',

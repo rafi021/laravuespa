@@ -21,13 +21,16 @@
                     <li class="nav-item">
                         <router-link class="nav-link" :to="{name: 'category-index'}">Product Category</router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="auth">
+                        <router-link class="nav-link" :to="{name: 'dashboard'}">Dashboard</router-link>
+                    </li>
+                    <li class="nav-item" v-if="!auth">
                         <router-link class="nav-link" :to="{name: 'login'}">Login</router-link>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <router-link class="nav-link" :to="{name: 'register'}">Register</router-link>
-                    </li>
-                    <li class="nav-item">
+                    </li> -->
+                    <li class="nav-item" v-if="auth">
                         <a href="#" class="nav-link" @click.prevent="logout">Logout</a>
                     </li>
                 </ul>
@@ -42,12 +45,18 @@ export default {
         logout(){
             axios.post('/logout')
             .then((res) =>{
-                console.log('success')
+                //console.log('success')
                 this.$toast.success({
                     title: "Success",
                     message: "Successfully Logout!!",
                 })
+                this.$router.push({name: 'login'})
             })
+        }
+    },
+    computed: {
+        auth(){
+            return this.$store.getters.getAuthenticated;
         }
     }
 };
