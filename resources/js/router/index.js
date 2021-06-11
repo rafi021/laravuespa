@@ -7,12 +7,20 @@ import CategoryIndex from '../pages/Category/index.vue'
 import CategoryCreate from '../pages/Category/create.vue'
 import CategoryEdit from '../pages/Category/edit.vue'
 
+// Authentication file
+import Login from "../pages/auth/Login.vue"
+import Register from "../pages/auth/Register.vue"
+
 Vue.use(VueRouter);
 
 const routes = new VueRouter({
     mode: 'history',
     routes: [
         { path: '/', component: Home, name: "home"},
+
+        // Auth routes
+        { path: '/auth/login', component: Login, name: "login"},
+        { path: '/register', component: Register, name: "register"},
 
         // Category routes
         { path: '/category', component: CategoryIndex, name: "category-index" },
