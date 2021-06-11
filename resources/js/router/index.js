@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 // Load components and Pages
-import Home from "../components/Home.vue"
+import Home from "../pages/Home.vue"
 
 Vue.use(VueRouter);
 
