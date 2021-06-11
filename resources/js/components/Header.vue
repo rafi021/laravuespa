@@ -27,6 +27,9 @@
                     <li class="nav-item">
                         <router-link class="nav-link" :to="{name: 'register'}">Register</router-link>
                     </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" @click.prevent="logout">Logout</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -34,7 +37,20 @@
 </template>
 
 <script>
-export default {};
+export default {
+    methods: {
+        logout(){
+            axios.post('/logout')
+            .then((res) =>{
+                console.log('success')
+                this.$toast.success({
+                    title: "Success",
+                    message: "Successfully Logout!!",
+                })
+            })
+        }
+    }
+};
 </script>
 
 <style></style>

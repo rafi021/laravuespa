@@ -1,6 +1,10 @@
 import Vue from 'vue'
+// Vue router routes
 import routes from './router/index'
 require('./bootstrap');
+
+// Vuex store
+import store from "./store/index"
 
 // Toastr setup
 import CxltToastr from 'cxlt-vue2-toastr'
@@ -26,4 +30,5 @@ Vue.component('app-header', require('./components/Header.vue').default);
 const app = new Vue({
     el: '#app',
     router: routes,
+    store,
 });
