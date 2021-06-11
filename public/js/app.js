@@ -1913,9 +1913,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  mounted: function mounted() {
-    console.log('component mounted.');
+  data: function data() {
+    return {
+      form: {
+        category_name: ''
+      },
+      errors: ''
+    };
+  },
+  methods: {
+    createCategory: function createCategory() {
+      var _this = this;
+
+      axios.post('/api/category', this.form).then(function (res) {
+        //   console.log(res.data)
+        _this.$router.push({
+          name: 'category-index'
+        });
+      })["catch"](function (err) {
+        _this.errors = err.response.data.errors;
+      });
+    }
   }
 });
 
@@ -1932,6 +1957,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2064,16 +2095,19 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
 /* harmony import */ var _router_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./router/index */ "./resources/js/router/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+
 
 
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); // Load components globally 
 
 
-vue__WEBPACK_IMPORTED_MODULE_1__.default.component('app-header', __webpack_require__(/*! ./components/Header.vue */ "./resources/js/components/Header.vue").default);
-var app = new vue__WEBPACK_IMPORTED_MODULE_1__.default({
+vue__WEBPACK_IMPORTED_MODULE_2__.default.component('app-header', __webpack_require__(/*! ./components/Header.vue */ "./resources/js/components/Header.vue").default);
+var app = new vue__WEBPACK_IMPORTED_MODULE_2__.default({
   el: '#app',
   router: _router_index__WEBPACK_IMPORTED_MODULE_0__.default
 });
@@ -38063,7 +38097,62 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _vm._m(0)
+          _c("div", { staticClass: "card-bdoy" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-6 offset-3" }, [
+                _c(
+                  "form",
+                  {
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.createCategory.apply(null, arguments)
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "categoryName" } }, [
+                        _vm._v("Category Name")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.category_name,
+                            expression: "form.category_name"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "category_name",
+                          placeholder: "Enter Category Name Here"
+                        },
+                        domProps: { value: _vm.form.category_name },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.form,
+                              "category_name",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(0)
+                  ]
+                )
+              ])
+            ])
+          ])
         ])
       ])
     ])
@@ -38074,29 +38163,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-bdoy" }, [
-      _c("form", { attrs: { action: "" } }, [
-        _c("div", { staticClass: "form-group" }, [
-          _c("label", { attrs: { for: "categoryName" } }, [
-            _vm._v("Category Name")
-          ]),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control",
-            attrs: {
-              type: "text",
-              name: "category_name",
-              id: "",
-              placeholder: "Enter Category Name Here",
-              "aria-describedby": "helpId"
-            }
-          }),
-          _vm._v(" "),
-          _c("small", { staticClass: "text-muted", attrs: { id: "helpId" } }, [
-            _vm._v("Provide a Category Name ")
-          ])
-        ])
-      ])
+    return _c("div", { staticClass: "form-group" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        [_vm._v("Create Category ")]
+      )
     ])
   }
 ]
@@ -38123,8 +38195,8 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-12" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-12" }, [
         _c("div", { staticClass: "card" }, [
           _c(
             "div",
@@ -38161,25 +38233,31 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-bdoy" }, [
-      _c("form", { attrs: { action: "" } }, [
-        _c("div", { staticClass: "form-group" }, [
-          _c("label", { attrs: { for: "categoryName" } }, [
-            _vm._v("Category Name")
-          ]),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control",
-            attrs: {
-              type: "text",
-              name: "category_name",
-              id: "",
-              placeholder: "Enter Category Name Here",
-              "aria-describedby": "helpId"
-            }
-          }),
-          _vm._v(" "),
-          _c("small", { staticClass: "text-muted", attrs: { id: "helpId" } }, [
-            _vm._v("Provide a Category Name ")
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-6 offset-3" }, [
+          _c("form", [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "categoryName" } }, [
+                _vm._v("Category Name")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  name: "category_name",
+                  placeholder: "Enter Category Name Here"
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c(
+                "button",
+                { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+                [_vm._v("Update Category ")]
+              )
+            ])
           ])
         ])
       ])
@@ -53722,6 +53800,18 @@ Vue.compile = compileToFunctions;
 /******/ 				}
 /******/ 			}
 /******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
 /******/ 		};
 /******/ 	})();
 /******/ 	

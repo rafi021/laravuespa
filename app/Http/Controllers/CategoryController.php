@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryStoreRequest;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -23,9 +26,21 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryStoreRequest $request)
     {
-        //
+        Category::create([
+            'category_name' => $request->category_name,
+            'category_slug' => Str::slug($request->category_name),
+        ]);
+
+        // $category = new CategoryResource()
+
+        $notification = [
+            'alert-type' => 'success',
+            'message' => 'Category Created!!'
+        ];
+        $status_code = 201;
+        return response()->json($notification, $status_code);
     }
 
     /**

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import routes from './router/index'
+import axios from 'axios'
 
 require('./bootstrap');
 

@@ -8,13 +8,19 @@
              <router-link :to="{name: 'category-index'}" class="btn btn-primary">Back to Category</router-link>
         </div>
           <div class="card-bdoy">
-              <form action="">
-                  <div class="form-group">
-                    <label for="categoryName">Category Name</label>
-                    <input type="text" name="category_name" id="" class="form-control" placeholder="Enter Category Name Here" aria-describedby="helpId">
-                    <small id="helpId" class="text-muted">Provide a Category Name </small>
+              <div class="row">
+                  <div class="col-6 offset-3">
+                    <form @submit.prevent="createCategory">
+                        <div class="form-group">
+                            <label for="categoryName">Category Name</label>
+                            <input type="text" name="category_name" class="form-control" placeholder="Enter Category Name Here" v-model="form.category_name">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Create Category </button>
+                        </div>
+                    </form>
                   </div>
-              </form>
+              </div>
           </div>
         </div>
       </div>
@@ -24,9 +30,25 @@
 
 <script>
 export default {
-    mounted(){
-        console.log('component mounted.')
-    }
+   data(){
+       return{
+           form: {
+               category_name: '',
+           },
+           errors: '',
+       }
+   },
+   methods: {
+       createCategory(){
+          axios.post('/api/category', this.form)
+          .then((res) => {
+            //   console.log(res.data)
+            this.$router.push({name: 'category-index'})
+          }).catch((err) =>{
+              this.errors = err.response.data.errors
+          })
+       }
+   }
 };
 </script>
 
