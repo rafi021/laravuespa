@@ -17,7 +17,7 @@ const routes = new VueRouter({
         // Category routes
         { path: '/category', component: CategoryIndex, name: "category-index" },
         { path: '/category/create', component: CategoryCreate, name: "category-create" },
-        { path: '/category/edit', component: CategoryEdit, name: "category-edit" },
+        { path: '/category/edit/:id', component: CategoryEdit, name: "category-edit" }, // this thing can be done with slug
     ]
 });
 

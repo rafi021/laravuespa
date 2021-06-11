@@ -54,7 +54,7 @@ export default {
             this.categoryForm.category_name = '';
             this.$router.push({name: 'category-index'})
             this.$toast.success({
-                title: res.data.alert-type,
+                title: res.data.alert_type,
                 message: res.data.message,
             })
         }).catch((err) => {

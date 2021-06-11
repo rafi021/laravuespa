@@ -17,7 +17,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::latest()->get();
+        // $categories = Category::latest()->paginate(5);
+        return CategoryResource::collection(Category::latest()->paginate(20));
+        //return response()->json($categories, 200);
     }
 
     /**
@@ -36,8 +39,8 @@ class CategoryController extends Controller
         // $category = new CategoryResource()
 
         $notification = [
-            'alert-type' => 'success',
-            'message' => 'Category Created!!'
+            'alert_type' => 'success',
+            'message' => 'Category Created Successfully!!'
         ];
         $status_code = 201;
         return response()->json($notification, $status_code);
@@ -51,7 +54,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return new CategoryResource($category);
     }
 
     /**
@@ -61,9 +64,21 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(CategoryStoreRequest $request, Category $category)
     {
-        //
+        $category->update([
+            'category_name' => $request->category_name,
+            'category_slug' => Str::slug($request->category_name),
+        ]);
+
+        // $category = new CategoryResource()
+
+        $notification = [
+            'alert_type' => 'success',
+            'message' => 'Category Updated Successfully!!'
+        ];
+        $status_code = 200;
+        return response()->json($notification, $status_code);
     }
 
     /**
@@ -74,6 +89,12 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        $notification = [
+            'alert_type' => 'warning',
+            'message' => 'Category Deleted Successfully!!'
+        ];
+        $status_code = 200;
+        return response()->json($notification, $status_code);
     }
 }

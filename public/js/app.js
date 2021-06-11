@@ -1950,7 +1950,7 @@ __webpack_require__.r(__webpack_exports__);
         });
 
         _this.$toast.success({
-          title: res.data.alert - type,
+          title: res.data.alert_type,
           message: res.data.message
         });
       })["catch"](function (err) {
@@ -1973,6 +1973,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vform */ "./node_modules/vform/dist/vform.es.js");
 //
 //
 //
@@ -2003,9 +2004,50 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {
+      categoryForm: new vform__WEBPACK_IMPORTED_MODULE_0__.Form({
+        category_name: ''
+      })
+    };
+  },
   mounted: function mounted() {
-    console.log('component mounted.');
+    this.loadCategory();
+  },
+  methods: {
+    loadCategory: function loadCategory() {
+      var _this = this;
+
+      var id = this.$route.params.id;
+      axios.get("/api/category/".concat(id)).then(function (res) {
+        //console.log(res.data)
+        _this.categoryForm.category_name = res.data.data.category_name;
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    updateCategory: function updateCategory() {
+      var _this2 = this;
+
+      var id = this.$route.params.id;
+      this.categoryForm.put("/api/category/".concat(id)).then(function (res) {
+        _this2.categoryForm.category_name = '';
+
+        _this2.$router.push({
+          name: 'category-index'
+        });
+
+        _this2.$toast.info({
+          title: res.data.alert_type,
+          message: res.data.message
+        });
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    }
   }
 });
 
@@ -2022,6 +2064,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2060,9 +2104,55 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {
+      categories: []
+    };
+  },
   mounted: function mounted() {
-    console.log('component mounted.');
+    this.loadCategories();
+  },
+  methods: {
+    loadCategories: function loadCategories() {
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/category').then(function (res) {
+        _this.categories = res.data.data;
+      })["catch"](function (err) {
+        console.log(err.response.data);
+
+        _this.$toast.error({
+          title: "Error",
+          message: "Data Fetch Error"
+        });
+      });
+    },
+    deleteCategory: function deleteCategory(id) {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default().delete("/api/category/".concat(id)).then(function (res) {
+        //console.log(res.data)
+        _this2.$toast.warn({
+          title: res.data.alert_type,
+          message: res.data.message
+        });
+      }).then(function () {
+        _this2.categories = _this2.categories.filter(function (category) {
+          return category.id != id;
+        });
+      })["catch"](function (err) {
+        //console.log(err)
+        _this2.$toast.error({
+          title: 'Error',
+          message: "Data Delete Error"
+        });
+      });
+    }
   }
 });
 
@@ -2231,10 +2321,11 @@ var routes = new vue_router__WEBPACK_IMPORTED_MODULE_5__.default({
     component: _pages_Category_create_vue__WEBPACK_IMPORTED_MODULE_2__.default,
     name: "category-create"
   }, {
-    path: '/category/edit',
+    path: '/category/edit/:id',
     component: _pages_Category_edit_vue__WEBPACK_IMPORTED_MODULE_3__.default,
     name: "category-edit"
-  }]
+  } // this thing can be done with slug
+  ]
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (routes);
 
@@ -38374,8 +38465,8 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-12" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-12" }, [
         _c("div", { staticClass: "card" }, [
           _c(
             "div",
@@ -38385,7 +38476,9 @@ var render = function() {
             },
             [
               _c("h5", { staticClass: "mb-0" }, [
-                _vm._v(" Product Category Edit Component")
+                _vm._v(
+                  " Edit Category - " + _vm._s(_vm.categoryForm.category_name)
+                )
               ]),
               _vm._v(" "),
               _c(
@@ -38400,7 +38493,78 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _vm._m(0)
+          _c("div", { staticClass: "card-bdoy" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-6 offset-3" }, [
+                _c(
+                  "form",
+                  {
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.updateCategory.apply(null, arguments)
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "categoryName" } }, [
+                        _vm._v("Category Name")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.categoryForm.category_name,
+                            expression: "categoryForm.category_name"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        class: {
+                          "is-invalid": _vm.categoryForm.errors.has(
+                            "category_name"
+                          )
+                        },
+                        attrs: {
+                          type: "text",
+                          name: "category_name",
+                          placeholder: "Enter Category Name Here"
+                        },
+                        domProps: { value: _vm.categoryForm.category_name },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.categoryForm,
+                              "category_name",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.categoryForm.errors.has("category_name")
+                        ? _c("div", {
+                            staticClass: "text-danger",
+                            domProps: {
+                              innerHTML: _vm._s(
+                                _vm.categoryForm.errors.get("category_name")
+                              )
+                            }
+                          })
+                        : _vm._e()
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(0)
+                  ]
+                )
+              ])
+            ])
+          ])
         ])
       ])
     ])
@@ -38411,35 +38575,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-bdoy" }, [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-6 offset-3" }, [
-          _c("form", [
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "categoryName" } }, [
-                _vm._v("Category Name")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: {
-                  type: "text",
-                  name: "category_name",
-                  placeholder: "Enter Category Name Here"
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c(
-                "button",
-                { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-                [_vm._v("Update Category ")]
-              )
-            ])
-          ])
-        ])
-      ])
+    return _c("div", { staticClass: "form-group" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        [_vm._v("Update Category ")]
+      )
     ])
   }
 ]
@@ -38496,39 +38637,67 @@ var render = function() {
             _c("table", { staticClass: "table" }, [
               _vm._m(0),
               _vm._v(" "),
-              _c("tbody", [
-                _c("tr", [
-                  _c("td", [_vm._v("1")]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v("Fashion")]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v("fashion")]),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    [
-                      _c(
-                        "router-link",
-                        {
-                          staticClass: "btn btn-primary btn-sm",
-                          attrs: { to: { name: "category-edit" } }
-                        },
-                        [_vm._v("Edit")]
-                      ),
+              _c(
+                "tbody",
+                [
+                  _vm._l(_vm.categories, function(category, index) {
+                    return _c("tr", { key: category.id }, [
+                      _c("td", { staticStyle: { width: "100px" } }, [
+                        _vm._v(_vm._s(index + 1))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(category.category_name))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(category.category_slug))]),
                       _vm._v(" "),
                       _c(
-                        "a",
-                        {
-                          staticClass: "btn btn-danger btn-sm",
-                          attrs: { href: "#" }
-                        },
-                        [_vm._v("Delete")]
+                        "td",
+                        { staticStyle: { width: "170px" } },
+                        [
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "btn btn-primary btn-sm",
+                              attrs: {
+                                to: {
+                                  name: "category-edit",
+                                  params: { id: category.id }
+                                }
+                              }
+                            },
+                            [_vm._v("Edit")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-danger btn-sm",
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.deleteCategory(category.id)
+                                }
+                              }
+                            },
+                            [_vm._v("Delete")]
+                          )
+                        ],
+                        1
                       )
-                    ],
-                    1
-                  )
-                ])
-              ])
+                    ])
+                  }),
+                  _vm._v(" "),
+                  !_vm.categories.length
+                    ? _c("tr", [
+                        _c("td", { attrs: { colspan: "10" } }, [
+                          _vm._v("No Data found yet!")
+                        ])
+                      ])
+                    : _vm._e()
+                ],
+                2
+              )
             ])
           ])
         ])
@@ -38543,13 +38712,13 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("Id")]),
+        _c("th", { staticStyle: { width: "100px" } }, [_vm._v("Id")]),
         _vm._v(" "),
         _c("th", [_vm._v("Name")]),
         _vm._v(" "),
         _c("th", [_vm._v("Slug")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Action")])
+        _c("th", { staticStyle: { width: "170px" } }, [_vm._v("Action")])
       ])
     ])
   }
