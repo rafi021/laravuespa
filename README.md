@@ -65,3 +65,9 @@ After completing the migration and seeding of db, you will have 1 user ready for
 User -> Mahmud Ibrahim
 Email -> admin@gmail.com
 Pass -> 12345678
+
+Finally we are ready to run our project using this command 
+
+```sh
+php artisan serve
+```
