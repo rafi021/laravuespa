@@ -8,7 +8,7 @@
 </p>
 
 ## About LaravelSPA
-It is a Laravel 8 & Vue JS based SPA started project for quick start of development. Build with love and open source for developer. 
+It is a Laravel 8 & Vue JS based SPA started project for quick start of development. Build with love and open source for developers. 
 
 1. Bootstrap 4.6
 2. laravel/ui
